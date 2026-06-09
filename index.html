@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SJTF Sublimação — Personalize com Cores Vivas</title>
+<meta name="description" content="SJTF Sublimação: camisetas, canecas, almofadas e brindes personalizados com qualidade profissional." />
+<style>
+:root{
+  --bg:#000000;
+  --bg-2:#0a0a0a;
+  --surface:#141414;
+  --surface-2:#1c1c1c;
+  --text:#ffffff;
+  --muted:#b8b8c8;
+  --primary:#e6007e;      /* magenta */
+  --primary-2:#ff6b1a;    /* orange */
+  --accent:#00b8e6;       /* cyan */
+  --accent-2:#ffd400;     /* yellow */
+  --success:#25d366;
+  --gradient:linear-gradient(135deg,#ff6b1a 0%,#e6007e 35%,#a020f0 65%,#00b8e6 100%);
+  --gradient-warm:linear-gradient(135deg,#ffd400,#ff6b1a,#e6007e);
+  --shadow:0 18px 40px -18px rgba(230,0,126,.6);
+  --radius:18px;
+  --container:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.55;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.container{max-width:var(--container);margin:0 auto;padding:0 20px}
+.section{padding:90px 0;position:relative}
+.section-title{
+  text-align:center;font-size:clamp(28px,4vw,44px);font-weight:800;
+  margin-bottom:14px;background:var(--gradient);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.section-subtitle{text-align:center;color:var(--muted);margin-bottom:50px;font-size:16px}
+
+/* ANIMAÇÕES */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.7)}50%{box-shadow:0 0 0 18px rgba(37,211,102,0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+@keyframes blob{0%,100%{border-radius:42% 58% 70% 30%/45% 45% 55% 55%}33%{border-radius:60% 40% 30% 70%/50% 60% 40% 50%}66%{border-radius:30% 70% 60% 40%/40% 50% 50% 60%}}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* HEADER */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  transition:.3s;
+}
+header.scrolled{background:rgba(0,0,0,.95);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:var(--container);margin:0 auto}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px}
+.logo-img{
+  width:46px;height:46px;border-radius:12px;object-fit:cover;
+  background:var(--gradient);padding:2px;
+  cursor:pointer;transition:.3s;
+}
+.logo-img:hover{transform:rotate(-6deg) scale(1.05)}
+.logo-text span{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-weight:500;font-size:15px;position:relative;padding:6px 0;transition:.3s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--gradient);transition:.3s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.icon-btn{
+  width:44px;height:44px;border-radius:12px;
+  background:var(--surface);display:grid;place-items:center;
+  position:relative;transition:.3s;border:1px solid rgba(255,255,255,.06);
+}
+.icon-btn:hover{background:var(--surface-2);transform:translateY(-2px)}
+.cart-badge{
+  position:absolute;top:-6px;right:-6px;width:22px;height:22px;padding:0;
+  background:var(--gradient-warm);border-radius:50%;font-size:11px;font-weight:700;
+  display:grid;place-items:center;box-shadow:0 4px 10px rgba(255,62,127,.5);
+  pointer-events:none;
+}
+.hamburger{display:none;flex-direction:column;gap:5px;width:44px;height:44px;border-radius:12px;background:var(--surface);align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.06);padding:0;flex:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);transition:transform .3s ease,opacity .3s ease;border-radius:2px;transform-origin:center}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* HERO SLIDER */
+.hero{
+  margin-top:78px;height:min(78vh,640px);position:relative;overflow:hidden;
+}
+.slides{display:flex;height:100%;transition:transform .6s cubic-bezier(.7,.0,.2,1);touch-action:pan-y}
+.slide{
+  min-width:100%;height:100%;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.slide::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,0,0,.85),rgba(230,0,126,.45),rgba(0,184,230,.35));
+}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.slide-content{position:relative;text-align:center;padding:0 20px;max-width:900px;animation:fadeUp 1s ease}
+.slide h1{font-size:clamp(32px,6vw,64px);font-weight:900;line-height:1.1;margin-bottom:20px;text-shadow:0 4px 20px rgba(0,0,0,.5)}
+.slide h1 span{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+.slide p{font-size:clamp(16px,2vw,20px);color:#e9eaf5;margin-bottom:30px;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 36px;border-radius:50px;font-weight:700;font-size:16px;
+  background:var(--gradient);color:#fff;
+  box-shadow:var(--shadow);transition:.3s;text-transform:uppercase;letter-spacing:.5px;
+}
+.btn-primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 20px 40px -10px rgba(255,62,127,.7)}
+
+.slider-dots{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:5}
+.dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:.3s}
+.dot.active{background:var(--gradient);width:36px;border-radius:6px}
+.slider-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);display:grid;place-items:center;z-index:5;transition:.3s;
+}
+.slider-arrow:hover{background:var(--primary);transform:translateY(-50%) scale(1.1)}
+.slider-arrow.prev{left:20px}.slider-arrow.next{right:20px}
+.slider-arrow svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.5}
+
+/* PRODUTOS */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.product-card{
+  background:var(--surface);border-radius:var(--radius);overflow:hidden;
+  border:1px solid rgba(255,255,255,.05);transition:.4s;position:relative;
+  display:flex;flex-direction:column;
+}
+.product-card:hover{transform:translateY(-8px);box-shadow:0 25px 50px -20px rgba(166,77,255,.5);border-color:rgba(166,77,255,.3)}
+.product-img{position:relative;aspect-ratio:1;overflow:hidden;cursor:zoom-in;background:#222}
+.product-img img{width:100%;height:100%;object-fit:cover;transition:.6s}
+.product-card:hover .product-img img{transform:scale(1.08)}
+.product-img::after{
+  content:'🔍';position:absolute;top:12px;right:12px;width:36px;height:36px;
+  background:rgba(0,0,0,.6);border-radius:50%;display:grid;place-items:center;font-size:16px;
+  opacity:0;transition:.3s;
+}
+.product-card:hover .product-img::after{opacity:1}
+.product-info{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.product-name{font-weight:700;font-size:17px}
+.product-desc{color:var(--muted);font-size:13px;flex:1}
+.product-price{font-size:22px;font-weight:800;background:var(--gradient-warm);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:8px}
+.add-cart{
+  padding:12px;border-radius:12px;background:var(--gradient);color:#fff;font-weight:700;
+  margin-top:10px;transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.add-cart:hover{transform:scale(1.02);box-shadow:0 10px 25px -10px var(--primary)}
+
+/* CARROSSEL */
+.carousel{position:relative;overflow:hidden;border-radius:var(--radius)}
+.carousel-track{display:flex;transition:transform .6s cubic-bezier(.7,0,.2,1);touch-action:pan-y}
+.carousel-slide{min-width:100%;aspect-ratio:16/9;position:relative;background:#222}
+.carousel-slide img{width:100%;height:100%;object-fit:cover}
+.carousel-slide::after{content:attr(data-title);position:absolute;left:20px;bottom:20px;background:rgba(0,0,0,.68);border:1px solid rgba(255,255,255,.12);padding:10px 16px;border-radius:999px;font-weight:800;color:#fff;backdrop-filter:blur(10px)}
+
+/* QUEM SOMOS */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.about-img{position:relative}
+.about-img::before{
+  content:'';position:absolute;inset:-20px;background:var(--gradient);
+  animation:blob 8s ease-in-out infinite,spin-slow 30s linear infinite;z-index:0;opacity:.4;filter:blur(20px);
+}
+.about-img img{position:relative;border-radius:24px;aspect-ratio:1;object-fit:cover;width:100%;z-index:1;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.about-content h2{font-size:36px;font-weight:800;margin-bottom:20px;background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+.about-content p{color:var(--muted);margin-bottom:14px;font-size:16px}
+.about-stats{display:flex;gap:24px;margin-top:30px}
+.stat{flex:1;padding:18px;background:var(--surface);border-radius:14px;text-align:center;border:1px solid rgba(255,255,255,.06)}
+.stat strong{display:block;font-size:28px;background:var(--gradient-warm);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+/* TESTEMUNHOS */
+.testimonials{overflow:hidden}
+.testi-track{display:flex;transition:transform .6s cubic-bezier(.7,0,.2,1);touch-action:pan-y}
+.testi-card{
+  min-width:100%;padding:0 12px;
+}
+.testi-inner{
+  background:var(--surface);padding:36px;border-radius:var(--radius);
+  border:1px solid rgba(255,255,255,.06);text-align:center;max-width:700px;margin:0 auto;
+  position:relative;
+}
+.testi-inner::before{content:'"';position:absolute;top:-10px;left:30px;font-size:120px;font-family:Georgia,serif;background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;opacity:.5}
+.testi-text{font-size:17px;font-style:italic;color:#e0e2f0;margin-bottom:24px;position:relative}
+.testi-author{font-weight:700;color:var(--accent)}
+.testi-role{font-size:13px;color:var(--muted)}
+
+/* ORÇAMENTO FORM */
+.quote-form{
+  max-width:680px;margin:0 auto;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--surface-2) 100%);
+  padding:38px;border-radius:24px;
+  border:1px solid rgba(230,0,126,.25);
+  box-shadow:0 30px 70px -25px rgba(230,0,126,.45),0 0 0 1px rgba(255,255,255,.04) inset;
+  position:relative;overflow:hidden;
+}
+.quote-form::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  background:var(--gradient);background-size:200% 100%;
+  animation:shimmer 3s linear infinite;
+}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;margin-bottom:8px;font-weight:600;font-size:14px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:14px 16px;background:var(--bg-2);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;color:var(--text);font-family:inherit;font-size:15px;transition:.3s;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(255,62,127,.15);
+}
+.form-group textarea{min-height:100px;resize:vertical}
+.btn-whatsapp{
+  width:100%;padding:16px;border-radius:14px;background:var(--success);color:#fff;font-weight:700;font-size:16px;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:.3s;
+}
+.btn-whatsapp:hover{background:#1ebd5a;transform:translateY(-2px);box-shadow:0 12px 25px -10px var(--success)}
+
+/* WHATSAPP FLOAT */
+.wa-float{
+  position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;
+  background:var(--success);display:grid;place-items:center;z-index:90;
+  box-shadow:0 10px 30px rgba(37,211,102,.5);animation:float 3s ease-in-out infinite;
+}
+.wa-float::after{
+  content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  box-shadow:0 0 0 0 rgba(37,211,102,.7);animation:pulse-glow 2s infinite;
+}
+.wa-float svg{width:32px;height:32px;fill:#fff}
+
+/* FOOTER */
+footer{
+  background:linear-gradient(180deg,var(--bg-2),#05060f);padding:60px 0 24px;
+  position:relative;overflow:hidden;
+}
+footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient);
+  background-size:200% 100%;animation:shimmer 3s linear infinite;
+}
+.footer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-bottom:40px}
+.footer-col h4{margin-bottom:18px;font-size:16px;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+.footer-col p,.footer-col a{color:var(--muted);font-size:14px;margin-bottom:8px;display:block;transition:.3s}
+.footer-col a:hover{color:var(--primary);transform:translateX(4px)}
+.social-row{display:flex;gap:12px;margin-top:14px}
+.social-btn{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;transition:.3s;
+}
+.social-btn:hover{transform:translateY(-4px) rotate(-6deg)}
+.social-btn.wa{background:var(--success)}
+.social-btn.ig{background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)}
+.social-btn svg{width:40px;height:40px;display:block}
+.social-btn.wa svg{fill:#fff;stroke:none}
+.social-btn.ig svg{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.06);text-align:center;color:var(--muted);font-size:13px}
+
+/* CART DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;opacity:0;pointer-events:none;transition:.3s}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:-420px;width:min(420px,100vw);height:100vh;background:var(--bg-2);
+  z-index:201;transition:right .4s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column;
+  box-shadow:-20px 0 50px rgba(0,0,0,.5);
+}
+.drawer.open{right:0}
+.drawer-header{padding:20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+.drawer-header h3{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:22px}
+.drawer-close{font-size:28px;width:36px;height:36px;border-radius:50%;background:var(--surface);display:grid;place-items:center}
+.cart-items{flex:1;overflow-y:auto;padding:16px 20px}
+.cart-item{display:flex;gap:12px;padding:12px;background:var(--surface);border-radius:12px;margin-bottom:10px;align-items:center}
+.cart-item img{width:60px;height:60px;border-radius:10px;object-fit:cover}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-weight:600;font-size:14px;margin-bottom:4px}
+.cart-item-price{color:var(--accent);font-weight:700;font-size:14px}
+.qty-controls{display:flex;align-items:center;gap:8px;margin-top:6px}
+.qty-btn{width:24px;height:24px;border-radius:6px;background:var(--surface-2);font-weight:700;display:grid;place-items:center}
+.cart-empty{text-align:center;color:var(--muted);padding:40px 20px}
+.drawer-footer{padding:20px;border-top:1px solid rgba(255,255,255,.08)}
+.drawer-footer{
+  background:linear-gradient(180deg,var(--surface) 0%,var(--bg-2) 100%);
+  box-shadow:0 -10px 30px rgba(0,0,0,.4);
+  position:relative;
+}
+.drawer-footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--gradient);background-size:200% 100%;
+  animation:shimmer 3s linear infinite;
+}
+.drawer-footer .form-group input{
+  background:var(--bg);border:1px solid rgba(230,0,126,.3);
+}
+.drawer-footer .form-group input:focus{
+  border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,184,230,.18);
+}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:16px;font-size:18px;font-weight:700}
+.cart-total span:last-child{background:var(--gradient-warm);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.lightbox.open{display:flex;animation:fadeUp .3s}
+.lightbox img{max-width:100%;max-height:90vh;border-radius:12px;animation:fadeUp .4s}
+.lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:24px;display:grid;place-items:center}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translate(-50%,150%);
+  background:var(--success);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;
+  z-index:500;transition:.4s cubic-bezier(.7,0,.2,1);box-shadow:0 20px 40px rgba(37,211,102,.4);
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{transform:translate(-50%,0)}
+
+/* MOBILE */
+@media(max-width:860px){
+  .nav-links{
+    position:fixed;top:78px;right:0;width:min(320px,90vw);height:calc(100vh - 78px);
+    background:var(--bg-2);flex-direction:column;align-items:flex-start;gap:0;
+    padding:30px 24px;transform:translateX(100%);transition:.4s;border-left:1px solid rgba(255,255,255,.08);
+  }
+  .nav-links.open{transform:translateX(0)}
+  .nav-links a{width:100%;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:17px}
+  .hamburger{display:flex}
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr;gap:30px}
+  .footer-grid{grid-template-columns:1fr;gap:30px;text-align:center}
+  .social-row{justify-content:center}
+  .section{padding:60px 0}
+  .hero{height:min(70vh,560px)}
+  .quote-form{padding:26px 20px;border-radius:20px}
+  .slider-arrow{width:42px;height:42px}
+  .slider-arrow.prev{left:10px}.slider-arrow.next{right:10px}
+  .testi-inner{padding:28px 20px}
+}
+@media(max-width:480px){
+  .products-grid{gap:14px}
+  .product-info{padding:14px}
+  .product-name{font-size:15px}
+  .product-price{font-size:18px}
+  .nav{padding:10px 14px}
+  .logo-text{font-size:16px}
+  .logo-img{width:40px;height:40px}
+  .icon-btn,.hamburger{width:40px;height:40px}
+  .hero{margin-top:68px;height:min(68vh,500px)}
+  .btn-primary{padding:13px 26px;font-size:14px}
+  .section{padding:48px 0}
+  .section-subtitle{margin-bottom:32px;font-size:14px}
+  .about-stats{gap:10px}
+  .stat{padding:12px 8px}
+  .stat strong{font-size:22px}
+  .container{padding:0 14px}
+  .quote-form{padding:22px 16px}
+  .form-group input,.form-group select,.form-group textarea{padding:12px 14px;font-size:14px}
+  .wa-float{width:54px;height:54px;bottom:18px;right:18px}
+  .wa-float svg{width:28px;height:28px}
+  .cart-badge{min-width:18px;height:18px;font-size:10px;top:-4px;right:-4px}
+}
+@media(max-width:360px){
+  .products-grid{grid-template-columns:1fr}
+  .nav-actions{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <nav class="nav">
+    <div class="logo">
+      <input type="file" id="logoInput" accept="image/jpeg,image/jpg,image/png" hidden>
+      <img src="img/logo.jpg" alt="Logo SJTF Sublimação" class="logo-img" id="logoImg" title="Clique para editar logo">
+      <div class="logo-text">SJTF <span>Sublimação</span></div>
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Início</a>
+      <a href="#produtos">Produtos</a>
+      <a href="#galeria">Galeria</a>
+      <a href="#sobre">Quem Somos</a>
+      <a href="#testemunhos">Depoimentos</a>
+      <a href="#orcamento">Orçamento</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="cartBtn" aria-label="Carrinho">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO SLIDER -->
+<section class="hero" id="home">
+    <div class="slides" id="slides">
+    <div class="slide"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=1600" alt="Camisetas sublimadas"><div class="slide-content"><h1>Sublimação com <span>Cores Vivas</span></h1><p>Camisetas, canecas e brindes personalizados que encantam.</p><a href="#produtos" class="btn-primary">Ver Produtos</a></div></div>
+    <div class="slide"><img src="https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=1600" alt="Canecas personalizadas"><div class="slide-content"><h1>Canecas <span>Únicas</span></h1><p>Transforme momentos em lembranças inesquecíveis.</p><a href="#orcamento" class="btn-primary">Fazer Orçamento</a></div></div>
+    <div class="slide"><img src="https://images.unsplash.com/photo-1542293787938-c9e299b88010?w=1600" alt="Brindes corporativos"><div class="slide-content"><h1>Brindes <span>Corporativos</span></h1><p>Eleve sua marca com produtos sublimados de qualidade.</p><a href="#orcamento" class="btn-primary">Solicitar</a></div></div>
+    <div class="slide"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1600" alt="Uniformes personalizados"><div class="slide-content"><h1>Uniformes <span>Personalizados</span></h1><p>Peças para equipes, eventos e empresas com acabamento profissional.</p><a href="#produtos" class="btn-primary">Escolher Peças</a></div></div>
+    <div class="slide"><img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1600" alt="Presentes personalizados"><div class="slide-content"><h1>Presentes com <span>Identidade</span></h1><p>Crie lembranças marcantes para datas especiais e campanhas.</p><a href="#orcamento" class="btn-primary">Criar Agora</a></div></div>
+  </div>
+  <button class="slider-arrow prev" id="heroPrev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <button class="slider-arrow next" id="heroNext"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+  <div class="slider-dots" id="heroDots"></div>
+</section>
+
+<!-- PRODUTOS -->
+<section class="section" id="produtos">
+  <div class="container">
+    <h2 class="section-title reveal">Nossos Produtos</h2>
+    <p class="section-subtitle reveal">Personalize com a cara da sua marca</p>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</section>
+
+<!-- CARROSSEL GALERIA -->
+<section class="section" id="galeria" style="background:var(--bg-2)">
+  <div class="container">
+    <h2 class="section-title reveal">Galeria de Trabalhos</h2>
+    <p class="section-subtitle reveal">Confira alguns de nossos projetos</p>
+    <div class="carousel reveal">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide" data-title="Camisetas para eventos"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1600" alt="Camisetas para eventos"></div>
+        <div class="carousel-slide" data-title="Kits personalizados"><img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1600" alt="Kits personalizados"></div>
+        <div class="carousel-slide" data-title="Moletom sublimado"><img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=1600" alt="Moletom sublimado"></div>
+        <div class="carousel-slide" data-title="Brindes criativos"><img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1600" alt="Brindes criativos"></div>
+        <div class="carousel-slide" data-title="Sacolas e ecobags"><img src="https://images.unsplash.com/photo-1544441893-675973e31985?w=1600" alt="Sacolas e ecobags personalizadas"></div>
+        <div class="carousel-slide" data-title="Linha corporativa"><img src="https://images.unsplash.com/photo-1530435460869-d13625c69bbf?w=1600" alt="Linha corporativa personalizada"></div>
+      </div>
+      <button class="slider-arrow prev" id="carPrev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="slider-arrow next" id="carNext"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="slider-dots" id="carDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUEM SOMOS -->
+<section class="section" id="sobre">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img reveal">
+        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800" alt="Profissional SJTF">
+      </div>
+      <div class="about-content reveal">
+        <h2>Quem Somos</h2>
+        <p>A <strong>SJTF Sublimação</strong> nasceu da paixão por transformar ideias em produtos únicos. Com mais de 8 anos de experiência, atendemos clientes em todo o Brasil com qualidade, agilidade e atenção a cada detalhe.</p>
+        <p>Trabalhamos com tecnologia de ponta e materiais selecionados para entregar cores vibrantes e durabilidade.</p>
+        <div class="about-stats">
+          <div class="stat"><strong>+1500</strong><span>Clientes</span></div>
+          <div class="stat"><strong>8</strong><span>Anos</span></div>
+          <div class="stat"><strong>+10k</strong><span>Produtos</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTEMUNHOS -->
+<section class="section testimonials" id="testemunhos" style="background:var(--bg-2)">
+  <div class="container">
+    <h2 class="section-title reveal">O que dizem</h2>
+    <p class="section-subtitle reveal">Depoimentos de quem confia</p>
+    <div class="reveal" style="overflow:hidden">
+      <div class="testi-track" id="testiTrack">
+        <div class="testi-card"><div class="testi-inner"><p class="testi-text">Produto entregue antes do prazo e com qualidade impecável! Recomendo demais.</p><p class="testi-author">Mariana Silva</p><p class="testi-role">Cliente desde 2022</p></div></div>
+        <div class="testi-card"><div class="testi-inner"><p class="testi-text">As cores ficaram lindas, exatamente como pedi. Atendimento nota 10!</p><p class="testi-author">Carlos Eduardo</p><p class="testi-role">Empreendedor</p></div></div>
+        <div class="testi-card"><div class="testi-inner"><p class="testi-text">Fiz brindes para minha empresa, todos amaram. Super profissionais!</p><p class="testi-author">Juliana Reis</p><p class="testi-role">Diretora de Marketing</p></div></div>
+        <div class="testi-card"><div class="testi-inner"><p class="testi-text">O atendimento pelo WhatsApp foi rápido e o orçamento veio bem explicado.</p><p class="testi-author">Rafael Martins</p><p class="testi-role">Organizador de eventos</p></div></div>
+        <div class="testi-card"><div class="testi-inner"><p class="testi-text">Encomendei lembranças para aniversário e ficaram perfeitas nos mínimos detalhes.</p><p class="testi-author">Patrícia Gomes</p><p class="testi-role">Cliente final</p></div></div>
+      </div>
+      <div class="slider-dots" id="testiDots" style="position:relative;margin-top:24px;transform:none;left:0;justify-content:center;display:flex"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ORÇAMENTO -->
+<section class="section" id="orcamento">
+  <div class="container">
+    <h2 class="section-title reveal">Faça seu Orçamento</h2>
+    <p class="section-subtitle reveal">Preencha e envie direto pelo WhatsApp</p>
+    <form class="quote-form reveal" id="quoteForm">
+      <div class="form-group"><label>Nome completo *</label><input type="text" name="nome" required></div>
+      <div class="form-group"><label>WhatsApp / Telefone *</label><input type="tel" name="contato" required placeholder="(00) 00000-0000"></div>
+      <div class="form-group"><label>Escolha o item *</label>
+        <select name="item" required>
+          <option value="">-- Selecione --</option>
+          <option>Camiseta Sublimada</option>
+          <option>Caneca Personalizada</option>
+          <option>Almofada</option>
+          <option>Squeeze / Garrafa</option>
+          <option>Mousepad</option>
+          <option>Quebra-Cabeça</option>
+          <option>Chinelo Personalizado</option>
+          <option>Ecobag Sublimada</option>
+          <option>Azulejo Decorativo</option>
+          <option>Kit Corporativo</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Informações extras (opcional)</label><textarea name="extra" placeholder="Quantidade, prazo, arte, etc."></textarea></div>
+      <button type="submit" class="btn-whatsapp">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"></svg>
+        Enviar Orçamento!
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>SJTF Sublimação</h4>
+        <p>Personalização profissional com qualidade e cores que duram.</p>
+        <div class="social-row">
+          <a class="social-btn wa" href="https://wa.me/5511999990000" id="footerWa" aria-label="WhatsApp" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.003 0C7.184 0 .015 7.168.013 15.987c0 2.82.738 5.575 2.137 8L0 32l8.232-2.116a15.97 15.97 0 0 0 7.769 1.979h.006c8.819 0 15.988-7.17 15.99-15.989a15.86 15.86 0 0 0-4.677-11.31A15.86 15.86 0 0 0 16.003 0Zm0 29.18h-.005a13.24 13.24 0 0 1-6.749-1.848l-.484-.287-5.014 1.314 1.338-4.888-.315-.501a13.21 13.21 0 0 1-2.025-7.066c.003-7.328 5.964-13.288 13.296-13.288a13.2 13.2 0 0 1 9.397 3.893 13.2 13.2 0 0 1 3.894 9.4c-.003 7.327-5.965 13.287-13.295 13.287zm7.293-9.954c-.4-.2-2.364-1.167-2.731-1.3-.366-.134-.633-.2-.9.2-.266.4-1.033 1.3-1.266 1.567-.233.267-.467.3-.866.1-2.366-1.183-3.918-2.111-5.479-4.787-.414-.712.414-.661 1.184-2.2.13-.267.066-.5-.034-.7-.1-.2-.9-2.167-1.233-2.967-.324-.778-.654-.672-.9-.685-.233-.012-.5-.014-.766-.014a1.47 1.47 0 0 0-1.066.5c-.366.4-1.4 1.367-1.4 3.333 0 1.967 1.434 3.867 1.633 4.134.2.266 2.82 4.307 6.834 6.04.954.412 1.7.658 2.281.842.958.305 1.83.262 2.52.159.769-.115 2.364-.967 2.697-1.9.333-.934.333-1.734.233-1.9-.1-.167-.366-.267-.766-.467z"/></svg></a>
+          <a class="social-btn ig" href="https://instagram.com/sjtfsublimacao" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="20" rx="5" ry="5"/><circle cx="11" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <p>📍 Rua das Cores, 123 - Centro</p>
+        <p>📱 (11) 99999-0000</p>
+        <p>✉️ contato@sjtfsublimacao.com</p>
+        <p>🕒 Seg-Sex: 9h às 18h</p>
+      </div>
+      <div class="footer-col">
+        <h4>Links</h4>
+        <a href="#produtos">Produtos</a>
+        <a href="#galeria">Galeria</a>
+        <a href="#sobre">Quem Somos</a>
+        <a href="#orcamento">Orçamento</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="year"></span> SJTF Sublimação. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" id="waFloat" href="#" aria-label="WhatsApp" target="_blank" rel="noopener">
+  <svg viewBox="0 0 32 32"><path d="M16.003 0C7.184 0 .015 7.168.013 15.987c0 2.82.738 5.575 2.137 8L0 32l8.232-2.116a15.97 15.97 0 0 0 7.769 1.979h.006c8.819 0 15.988-7.17 15.99-15.989a15.86 15.86 0 0 0-4.677-11.31A15.86 15.86 0 0 0 16.003 0Zm0 29.18h-.005a13.24 13.24 0 0 1-6.749-1.848l-.484-.287-5.014 1.314 1.338-4.888-.315-.501a13.21 13.21 0 0 1-2.025-7.066c.003-7.328 5.964-13.288 13.296-13.288a13.2 13.2 0 0 1 9.397 3.893 13.2 13.2 0 0 1 3.894 9.4c-.003 7.327-5.965 13.287-13.295 13.287zm7.293-9.954c-.4-.2-2.364-1.167-2.731-1.3-.366-.134-.633-.2-.9.2-.266.4-1.033 1.3-1.266 1.567-.233.267-.467.3-.866.1-2.366-1.183-3.918-2.111-5.479-4.787-.414-.712.414-.661 1.184-2.2.13-.267.066-.5-.034-.7-.1-.2-.9-2.167-1.233-2.967-.324-.778-.654-.672-.9-.685-.233-.012-.5-.014-.766-.014a1.47 1.47 0 0 0-1.066.5c-.366.4-1.4 1.367-1.4 3.333 0 1.967 1.434 3.867 1.633 4.134.2.266 2.82 4.307 6.834 6.04.954.412 1.7.658 2.281.842.958.305 1.83.262 2.52.159.769-.115 2.364-.967 2.697-1.9.333-.934.333-1.734.233-1.9-.1-.167-.366-.267-.766-.467z"/></svg>
+</a>
+
+<!-- CART DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h3>Seu Carrinho</h3>
+    <button class="drawer-close" id="drawerClose">×</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="drawer-footer">
+    <div class="form-group"><label>Seu nome</label><input type="text" id="clientName" placeholder="Nome completo"></div>
+    <div class="form-group"><label>Contato (WhatsApp)</label><input type="tel" id="clientPhone" placeholder="(00) 00000-0000"></div>
+    <div class="cart-total"><span>Total:</span><span id="cartTotal">R$ 0,00</span></div>
+    <button class="btn-whatsapp" id="sendCartWa">
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="#fff"><path d="M16.003 0C7.184 0 .015 7.168.013 15.987c0 2.82.738 5.575 2.137 8L0 32l8.232-2.116a15.97 15.97 0 0 0 7.769 1.979h.006c8.819 0 15.988-7.17 15.99-15.989a15.86 15.86 0 0 0-4.677-11.31A15.86 15.86 0 0 0 16.003 0Zm0 29.18h-.005a13.24 13.24 0 0 1-6.749-1.848l-.484-.287-5.014 1.314 1.338-4.888-.315-.501a13.21 13.21 0 0 1-2.025-7.066c.003-7.328 5.964-13.288 13.296-13.288a13.2 13.2 0 0 1 9.397 3.893 13.2 13.2 0 0 1 3.894 9.4c-.003 7.327-5.965 13.287-13.295 13.287zm7.293-9.954c-.4-.2-2.364-1.167-2.731-1.3-.366-.134-.633-.2-.9.2-.266.4-1.033 1.3-1.266 1.567-.233.267-.467.3-.866.1-2.366-1.183-3.918-2.111-5.479-4.787-.414-.712.414-.661 1.184-2.2.13-.267.066-.5-.034-.7-.1-.2-.9-2.167-1.233-2.967-.324-.778-.654-.672-.9-.685-.233-.012-.5-.014-.766-.014a1.47 1.47 0 0 0-1.066.5c-.366.4-1.4 1.367-1.4 3.333 0 1.967 1.434 3.867 1.633 4.134.2.266 2.82 4.307 6.834 6.04.954.412 1.7.658 2.281.842.958.305 1.83.262 2.52.159.769-.115 2.364-.967 2.697-1.9.333-.934.333-1.734.233-1.9-.1-.167-.366-.267-.766-.467z"/></svg>
+      Enviar Orçamento via WhatsApp
+    </button>
+  </div>
+</aside>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox"><button class="lightbox-close" id="lightboxClose">×</button><img id="lightboxImg" src="" alt=""></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ <span id="toastMsg">Orçamento enviado com sucesso!</span></div>
+
+<script>
+// ============ CONFIG ============
+const WHATSAPP_NUMBER = '5511999990000'; // edite aqui
+const PRODUCTS = [
+  {id:1, name:'Camiseta Sublimada', desc:'Camiseta poliéster 100%, sublimação total.', price:49.90, img:'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600'},
+  {id:2, name:'Caneca Mágica', desc:'Caneca que revela a estampa com líquido quente.', price:34.90, img:'https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=600'},
+  {id:3, name:'Almofada Personalizada', desc:'40x40 cm com enchimento, capa sublimada.', price:39.90, img:'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=600'},
+  {id:4, name:'Squeeze 500ml', desc:'Garrafa alumínio sublimada, cores vibrantes.', price:42.00, img:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600'},
+  {id:5, name:'Mousepad Gamer', desc:'Mousepad grande 30x70 cm sublimado.', price:29.90, img:'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600'},
+  {id:6, name:'Quebra-Cabeça Foto', desc:'Quebra-cabeça personalizado com sua foto.', price:54.90, img:'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600'},
+  {id:7, name:'Chinelo Personalizado', desc:'Par de chinelos com arte, nome ou foto.', price:44.90, img:'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600'},
+  {id:8, name:'Ecobag Sublimada', desc:'Bolsa sustentável personalizada para marcas e eventos.', price:36.90, img:'https://images.unsplash.com/photo-1544441893-675973e31985?w=600'},
+  {id:9, name:'Azulejo Decorativo', desc:'Azulejo com foto, frase ou arte para presente.', price:32.90, img:'https://images.unsplash.com/photo-1534889156217-d643df14f14a?w=600'},
+  {id:10, name:'Kit Corporativo', desc:'Combo de brindes sob medida para empresas.', price:119.90, img:'https://images.unsplash.com/photo-1530435460869-d13625c69bbf?w=600'},
+  {id:11, name:'Body Infantil', desc:'Peça infantil personalizada para datas especiais.', price:45.90, img:'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=600'},
+  {id:12, name:'Necessaire Personalizada', desc:'Necessaire sublimada para presentes e lembranças.', price:38.90, img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600'}
+];
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+// ============ HEADER ============
+window.addEventListener('scroll',()=>$('#header').classList.toggle('scrolled',scrollY>40));
+$('#year').textContent = new Date().getFullYear();
+
+// LOGO editável
+$('#logoImg').addEventListener('click',()=>$('#logoInput').click());
+$('#logoInput').addEventListener('change',e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => { $('#logoImg').src = ev.target.result; toast('Logo atualizada!'); };
+  r.readAsDataURL(f);
+});
+
+// MENU MOBILE
+$('#hamburger').addEventListener('click',()=>{
+  $('#hamburger').classList.toggle('active');
+  $('#navLinks').classList.toggle('open');
+});
+$$('#navLinks a').forEach(a=>a.addEventListener('click',()=>{
+  $('#hamburger').classList.remove('active');
+  $('#navLinks').classList.remove('open');
+}));
+
+// ============ SLIDER (genérico) ============
+function makeSlider(trackSel, dotsSel, prevSel, nextSel, autoMs){
+  const track = $(trackSel);
+  const dotsBox = $(dotsSel);
+  const total = track.children.length;
+  let idx = 0;
+  // dots
+  for(let i=0;i<total;i++){
+    const d = document.createElement('button');
+    d.className = 'dot'+(i===0?' active':'');
+    d.addEventListener('click',()=>go(i));
+    dotsBox.appendChild(d);
+  }
+  const dots = dotsBox.children;
+  function go(i){
+    idx = (i+total)%total;
+    track.style.transform = `translateX(-${idx*100}%)`;
+    [...dots].forEach((d,k)=>d.classList.toggle('active',k===idx));
+  }
+  if(prevSel) $(prevSel).addEventListener('click',()=>go(idx-1));
+  if(nextSel) $(nextSel).addEventListener('click',()=>go(idx+1));
+  // swipe
+  let sx=0, dx=0;
+  track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;dx=0},{passive:true});
+  track.addEventListener('touchmove',e=>{dx=e.touches[0].clientX-sx},{passive:true});
+  track.addEventListener('touchend',()=>{ if(Math.abs(dx)>50) go(dx<0?idx+1:idx-1); });
+  if(autoMs){ setInterval(()=>go(idx+1), autoMs); }
+  return go;
+}
+makeSlider('#slides','#heroDots','#heroPrev','#heroNext',5000);
+makeSlider('#carouselTrack','#carDots','#carPrev','#carNext',4500);
+makeSlider('#testiTrack','#testiDots',null,null,6000);
+
+// ============ PRODUTOS ============
+const grid = $('#productsGrid');
+PRODUCTS.forEach(p=>{
+  const c = document.createElement('article');
+  c.className = 'product-card reveal';
+  c.innerHTML = `
+    <div class="product-img" data-img="${p.img}"><img src="${p.img}" alt="${p.name}"></div>
+    <div class="product-info">
+      <h3 class="product-name">${p.name}</h3>
+      <p class="product-desc">${p.desc}</p>
+      <div class="product-price">${fmt(p.price)}</div>
+      <button class="add-cart" data-id="${p.id}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        Adicionar ao Carrinho
+      </button>
+    </div>`;
+  grid.appendChild(c);
+});
+
+// add-to-cart
+grid.addEventListener('click',e=>{
+  const btn = e.target.closest('.add-cart');
+  if(btn){ addToCart(+btn.dataset.id); return; }
+  const img = e.target.closest('.product-img');
+  if(img){ openLightbox(img.dataset.img); }
+});
+
+// ============ CART ============
+const cart = {};
+function addToCart(id){
+  cart[id] = (cart[id]||0) + 1;
+  renderCart();
+  toast('Adicionado ao carrinho!');
+}
+function changeQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id]<=0) delete cart[id];
+  renderCart();
+}
+function renderCart(){
+  const items = Object.entries(cart);
+  const totalItems = items.reduce((s,[,q])=>s+q,0);
+  const totalVal = items.reduce((s,[id,q])=>s + q*PRODUCTS.find(p=>p.id==id).price, 0);
+  $('#cartBadge').textContent = totalItems;
+  $('#cartTotal').textContent = fmt(totalVal);
+  const box = $('#cartItems');
+  if(items.length===0){ box.innerHTML='<div class="cart-empty">Seu carrinho está vazio</div>'; return; }
+  box.innerHTML = items.map(([id,q])=>{
+    const p = PRODUCTS.find(x=>x.id==id);
+    return `<div class="cart-item">
+      <img src="${p.img}" alt="">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${p.name}</div>
+        <div class="cart-item-price">${fmt(p.price*q)}</div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+          <span>${q}</span>
+          <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+renderCart();
+
+$('#cartBtn').addEventListener('click',()=>{$('#drawer').classList.add('open');$('#drawerOverlay').classList.add('open')});
+$('#drawerClose').addEventListener('click',closeDrawer);
+$('#drawerOverlay').addEventListener('click',closeDrawer);
+function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerOverlay').classList.remove('open')}
+
+$('#sendCartWa').addEventListener('click',()=>{
+  const name = $('#clientName').value.trim();
+  const phone = $('#clientPhone').value.trim();
+  const items = Object.entries(cart);
+  if(items.length===0){ toast('Carrinho vazio!','#e74c3c'); return; }
+  if(!name || !phone){ toast('Preencha nome e contato','#e74c3c'); return; }
+  let msg = `*Novo Orçamento - SJTF Sublimação*%0A%0A`;
+  msg += `*Cliente:* ${name}%0A*Contato:* ${phone}%0A%0A*Itens:*%0A`;
+  let total = 0;
+  items.forEach(([id,q])=>{
+    const p = PRODUCTS.find(x=>x.id==id);
+    msg += `• ${q}x ${p.name} - ${fmt(p.price*q)}%0A`;
+    total += p.price*q;
+  });
+  msg += `%0A*Total:* ${fmt(total)}`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank');
+  toast('Orçamento enviado com sucesso!');
+  closeDrawer();
+});
+
+// ============ FORM ORÇAMENTO ============
+$('#quoteForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const f = new FormData(e.target);
+  let msg = `*Novo Orçamento - SJTF Sublimação*%0A%0A`;
+  msg += `*Nome:* ${f.get('nome')}%0A*Contato:* ${f.get('contato')}%0A*Item:* ${f.get('item')}%0A`;
+  if(f.get('extra')) msg += `*Observações:* ${f.get('extra')}`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank');
+  toast('Orçamento enviado com sucesso!');
+  e.target.reset();
+});
+
+// WA float + footer
+$('#waFloat').href = `https://wa.me/${WHATSAPP_NUMBER}`;
+$('#footerWa').href = `https://wa.me/${WHATSAPP_NUMBER}`;
+
+// ============ LIGHTBOX ============
+function openLightbox(src){
+  $('#lightboxImg').src = src;
+  $('#lightbox').classList.add('open');
+}
+$('#lightboxClose').addEventListener('click',()=>$('#lightbox').classList.remove('open'));
+$('#lightbox').addEventListener('click',e=>{ if(e.target.id==='lightbox') $('#lightbox').classList.remove('open'); });
+
+// ============ TOAST ============
+let toastTimer;
+function toast(msg, color){
+  const t = $('#toast');
+  $('#toastMsg').textContent = msg;
+  if(color) t.style.background = color; else t.style.background = '';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ============ REVEAL ON SCROLL ============
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('visible'); io.unobserve(en.target); } });
+},{threshold:.15});
+$$('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
